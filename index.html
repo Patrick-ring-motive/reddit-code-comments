@@ -183,7 +183,7 @@
         });
 
         // Convert leading spaces to em spaces on each line
-        const lines = beautified.split('\n');
+        const lines = beautified.replaceAll('[','\[').replaceAll(']','\]').split('\n');
         const emLines = lines.map(line => {
             const leadingSpaces = line.match(/^\s*/)[0].length;
             const emSpaces = ' '.repeat(leadingSpaces); // blank pattern
