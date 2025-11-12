@@ -196,8 +196,7 @@
             let highlighted = '';
             let specialChars = '';
             
-            for (let i = 0; i < line.length; i++) {
-                let char = line[i];
+            for (const char of line) {
                 
                 // Check if character is NOT a letter, number, or whitespace
                 if (!/[a-zA-Z0-9\s]/.test(char)) {
@@ -227,14 +226,14 @@
 
         let highlighted = processedLines.join('\n');
 
-        document.getElementById('output').value = highlighted;
+        (document.querySelector('#output')??{}).value = highlighted;
         showMessage('Code formatted successfully!', true);
     }
 
     function copyOutput() {
-        const output = document.getElementById('output');
+        const output = document.querySelector('#output');
         
-        if (!output.value) {
+        if (!output?.value) {
             showMessage('Nothing to copy! Format some code first.', false);
             return;
         }
@@ -249,18 +248,18 @@
     }
 
     function clearAll() {
-        document.getElementById('input').value = '';
-        document.getElementById('output').value = '';
-        document.getElementById('message').classList.remove('show');
+        (document.querySelector('#input')??{}).value = '';
+        (document.querySelector('#output')??{}).value = '';
+        document.querySelector('#message')?.classList?.remove?.('show');
     }
 
     function showMessage(text, isSuccess) {
-        const message = document.getElementById('message');
-        message.textContent = text;
-        message.className = 'message' + (isSuccess ? ' success' : '') + ' show';
+        const message = document.querySelector('#message');
+        (message??{}).textContent = text;
+        (message??{}).className = 'message' + (isSuccess ? ' success' : '') + ' show';
         
         setTimeout(() => {
-            message.classList.remove('show');
+            message?.classList?.remove?.('show');
         }, 3000);
     }
 </script>
