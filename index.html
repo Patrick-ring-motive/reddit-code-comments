@@ -135,6 +135,65 @@
     .message.show {
         display: block;
     }
+
+    .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: -2px;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        background: #f5f5f5;
+        border: 2px solid #ddd;
+        border-bottom: none;
+        border-radius: 4px 4px 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s;
+    }
+
+    .tab:hover {
+        background: #e8e8e8;
+    }
+
+    .tab.active {
+        background: white;
+        color: #FF4500;
+        border-bottom: 2px solid white;
+        margin-bottom: -2px;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .preview {
+        min-height: 200px;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        overflow-x: auto;
+    }
+
+    .preview a {
+        color: #0079D3;
+        text-decoration: none;
+    }
+
+    .preview a:hover {
+        text-decoration: underline;
+    }
 </style>
 
 
@@ -147,7 +206,7 @@
 
     <div class="panel">
         <label for="input">Input Code:</label>
-        <textarea autocomplete="off" autocorrect="off" autocapitalize="off" id="input" placeholder="Paste your code here..."></textarea>
+        <textarea autocomplete="off" autocorrect="off" autocapitalize="off"  id="input" placeholder="Paste your code here..."></textarea>
     </div>
 
     <div class="button-group">
@@ -156,8 +215,19 @@
     </div>
 
     <div class="panel">
-        <label for="output">Reddit-Ready Output:</label>
-        <textarea id="output" readonly placeholder="Formatted code will appear here..."></textarea>
+        <label>Output:</label>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('markdown')">Markdown</div>
+            <div class="tab" onclick="switchTab('preview')">Preview</div>
+        </div>
+        
+        <div id="markdown-tab" class="tab-content active">
+            <textarea id="output" readonly placeholder="Formatted code will appear here..."></textarea>
+        </div>
+        
+        <div id="preview-tab" class="tab-content">
+            <div id="preview" class="preview">Preview will appear here after formatting...</div>
+        </div>
     </div>
 
     <div class="button-group">
@@ -168,6 +238,36 @@
 </div>
 
 <script>
+    function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    function renderPreview(markdown) {
+        // Simple markdown to HTML converter for preview
+        let html = markdown;
+        
+        // Convert markdown links [text](url) to HTML links
+        html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+        
+        // Convert backslashes at end of lines to <br>
+        html = html.replace(/\\$/gm, '<br>');
+        
+        // Convert newlines to <br>
+        html = html.replace(/\n/g, '<br>');
+        
+        return html;
+    }
+
     function formatCode() {
         const input = document.querySelector('#input')?.value?.trim?.();
         
@@ -186,7 +286,7 @@
         const lines = beautified.replaceAll('[','\\[').replaceAll(']','\\]').split('\n');
         const emLines = lines.map(line => {
             const leadingSpaces = line.match(/^\s*/)[0].length;
-            const emSpaces = ' '.repeat(leadingSpaces); // blank pattern
+            const emSpaces = ' '.repeat(leadingSpaces); // em space
             const restOfLine = line.substring(leadingSpaces);
             return emSpaces + restOfLine;
         });
@@ -227,6 +327,10 @@
         const highlighted = processedLines.join('\n');
 
         (document.querySelector('#output')??{}).value = highlighted;
+        
+        // Update preview
+        document.getElementById('preview').innerHTML = renderPreview(highlighted);
+        
         showMessage('Code formatted successfully!', true);
     }
 
@@ -250,6 +354,7 @@
     function clearAll() {
         (document.querySelector('#input')??{}).value = '';
         (document.querySelector('#output')??{}).value = '';
+        document.getElementById('preview').innerHTML = 'Preview will appear here after formatting...';
         document.querySelector('#message')?.classList?.remove?.('show');
     }
 
