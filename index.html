@@ -344,7 +344,7 @@
         (document.querySelector('#output')??{}).value = highlighted;
         
         // Update preview
-        document.getElementById('preview').innerHTML = renderPreview(highlighted);
+        (document.querySelector('#preview')??{}).innerHTML = renderPreview(highlighted);
         
         showMessage('Code formatted successfully!', true);
     }
@@ -369,7 +369,7 @@
     function clearAll() {
         (document.querySelector('#input')??{}).value = '';
         (document.querySelector('#output')??{}).value = '';
-        document.getElementById('preview').innerHTML = 'Preview will appear here after formatting...';
+        (document.querySelector('#preview')??{}).innerHTML = 'Preview will appear here after formatting...';
         document.querySelector('#message')?.classList?.remove?.('show');
     }
 
