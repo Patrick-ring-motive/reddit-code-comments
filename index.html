@@ -301,7 +301,7 @@
         const lines = beautified.replaceAll('[','\\[').replaceAll(']','\\]').split('\n');
         const emLines = lines.map(line => {
             const leadingSpaces = line.match(/^\s*/)[0].length;
-            const emSpaces = ' '.repeat(leadingSpaces); // em space
+            const emSpaces = ' '.repeat(leadingSpaces); // em space
             const restOfLine = line.substring(leadingSpaces);
             return emSpaces + restOfLine;
         });
