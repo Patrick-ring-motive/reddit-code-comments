@@ -177,22 +177,22 @@
         }
 
         // Beautify the code
-        let beautified = js_beautify(input, {
+        const beautified = js_beautify(input, {
             indent_size: 1,
             space_in_empty_paren: false
         });
 
-        // Convert leading spaces to braille spaces on each line
-        let lines = beautified.split('\n');
-        let brailleLines = lines.map(line => {
-            let leadingSpaces = line.match(/^\s*/)[0].length;
-            let brailleSpaces = ' '.repeat(leadingSpaces); // Braille blank pattern
-            let restOfLine = line.substring(leadingSpaces);
-            return brailleSpaces + restOfLine;
+        // Convert leading spaces to em spaces on each line
+        const lines = beautified.split('\n');
+        const emLines = lines.map(line => {
+            const leadingSpaces = line.match(/^\s*/)[0].length;
+            const emSpaces = ' '.repeat(leadingSpaces); // blank pattern
+            const restOfLine = line.substring(leadingSpaces);
+            return emSpaces + restOfLine;
         });
 
         // Process each line: highlight special chars, then add backslash at end
-        let processedLines = brailleLines.map((line, index) => {
+        const processedLines = emLines.map((line, index) => {
             let highlighted = '';
             let specialChars = '';
             
@@ -217,14 +217,14 @@
             }
             
             // Add backslash at end of line (except for the last line)
-            if (index < brailleLines.length - 1) {
+            if (index < emLines.length - 1) {
                 highlighted += '\\';
             }
             
             return highlighted;
         });
 
-        let highlighted = processedLines.join('\n');
+        const highlighted = processedLines.join('\n');
 
         (document.querySelector('#output')??{}).value = highlighted;
         showMessage('Code formatted successfully!', true);
