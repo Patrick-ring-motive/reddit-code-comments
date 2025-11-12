@@ -238,18 +238,33 @@
 </div>
 
 <script>
+    const docSelectAll = x => {
+        try{
+          return document.querySelectorAll(x);
+        }catch(e){
+          console.warn(e,x);
+          return document.createElement('NodeList').childNodes;
+        }
+    };
+    const docSelect = x => {
+        try{
+            return document.querySelector(x);
+        }catch(e){
+            console.warn(e,x);
+        }
+    };
     function switchTab(tabName) {
         // Update tab buttons
-        document.querySelectorAll('.tab').forEach(tab => {
+        docSelectAll('.tab')?.forEach?.(tab => {
             tab.classList.remove('active');
         });
         event.target.classList.add('active');
         
         // Update tab content
-        document.querySelectorAll('.tab-content').forEach(content => {
+        docSelectAll('.tab-content')?.forEach?.(content => {
             content.classList.remove('active');
         });
-        document.getElementById(tabName + '-tab').classList.add('active');
+        docSelect(`#${tabName}-tab`)?.classList?.add?.('active');
     }
 
     function renderPreview(markdown) {
