@@ -169,9 +169,9 @@
 
 <script>
     function formatCode() {
-        const input = document.getElementById('input').value;
+        const input = document.querySelector('#input')?.value?.trim?.();
         
-        if (!input.trim()) {
+        if (!input) {
             showMessage('Please enter some code first!', false);
             return;
         }
